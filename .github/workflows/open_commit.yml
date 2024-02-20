@@ -1,0 +1,28 @@
+name: Create and push commit
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        type: string
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  create_commit:
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: |
+          git commit --allow-empty -m "$MESSAGE"
+          git push origin ${{ github.event.inputs.main_version }}
+        env:
+          MESSAGE: ${{ inputs.message }}
