@@ -14,6 +14,8 @@ concurrency:
 jobs:
   create_commit:
     runs-on: "ubuntu-latest"
+    permissions:
+      contents: write
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +23,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - name: |
+      - name: Add commit
+        run: |
           git commit --allow-empty -m "$MESSAGE"
           git push origin ${{ github.event.inputs.main_version }}
         env:
