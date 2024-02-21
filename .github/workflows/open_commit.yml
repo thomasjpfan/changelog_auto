@@ -37,6 +37,7 @@ jobs:
           git tag -a $RELEASE_VERSION -F <(echo $changelog_items)
       - name: Push commit to GitHub
         run: |
+          git push origin ${{ github.event.inputs.main_version }}
           git push origin $RELEASE_VERSION
       - name: Create release with tag
         run: |
