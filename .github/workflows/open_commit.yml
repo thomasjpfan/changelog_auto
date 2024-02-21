@@ -28,7 +28,9 @@ jobs:
           python-version: "3.10"
       - name: Update changelog
         run: |
+          set -euxo pipefail
           changelog_items=$(python maint_tools/parse_changelog.py CHANGELOG.md $RELEASE_VERSION)
+          git add CHANGELOG.md
           git commit -m "Update changelog for $RELEASE_VERSION"
         env:
           RELEASE_VERSION: ${{ inputs.release_version }}
