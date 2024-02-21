@@ -31,12 +31,10 @@ jobs:
       - name: Update changelog
         run: |
           set -euxo pipefail
-          changelog_items=$(python maint_tools/parse_changelog.py CHANGELOG.md $RELEASE_VERSION)
+          python maint_tools/parse_changelog.py $RELEASE_VERSION CHANGELOG.md --release_changelog release_changelog.txt
           git add CHANGELOG.md
           git commit --allow-empty -m "Update changelog for $RELEASE_VERSION"
           git tag $RELEASE_VERSION
-
-          echo $changelog_items > release_changelog.txt
       - name: Push commit to GitHub
         run: |
           git push origin ${{ github.event.inputs.main_version }}
@@ -45,10 +43,9 @@ jobs:
         run: |
           set -euxo pipefail
           if [[ $RELEASE_VERSION == *"b"* ]]; then
-            gh release create $RELEASE_VERSION -t $RELEASE_VERSION --prerelease
+            gh release create $RELEASE_VERSION -t $RELEASE_VERSION -F release_changelog.txt --prerelease
           else
-            gh release create $RELEASE_VERSION -t $RELEASE_VERSION
+            gh release create $RELEASE_VERSION -t $RELEASE_VERSION -F release_changelog.txt
           fi
-          gh release edit $RELEASE_VERSION --notes-file release_changelog.txt
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

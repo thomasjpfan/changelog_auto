@@ -41,8 +41,9 @@ def update_date_in_changelog(changelog_content: str, version: str) -> str:
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("changelog_file", type=Path)
     parser.add_argument("version")
+    parser.add_argument("changelog_file", type=Path)
+    parser.add_argument("--release_changelog", type=Path)
     parser.add_argument(
         "--only-check", action="store_true", help="Check if version exists in changelog"
     )
@@ -73,4 +74,5 @@ if __name__ == "__main__":
     new_changelog = update_date_in_changelog(changelog_content, release_version)
     args.changelog_file.write_text(new_changelog)
 
-    print(changelog[release_version])
+    if args.release_changelog:
+        args.release_changelog.write_text(changelog[release_version])
