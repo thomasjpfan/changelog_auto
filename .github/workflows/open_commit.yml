@@ -44,7 +44,7 @@ jobs:
       - name: Create release with tag
         run: |
           set -euxo pipefail
-          if [[ $RELEASE_VERSION == *"b"* || ]]; then
+          if [[ $RELEASE_VERSION == *"b"* ]]; then
             gh release create $RELEASE_VERSION -t $RELEASE_VERSION --notes-file release_changelog.txt --prerelease
           else
             gh release create $RELEASE_VERSION -t $RELEASE_VERSION --notes-file release_changelog.txt
