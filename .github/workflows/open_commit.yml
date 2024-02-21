@@ -33,7 +33,7 @@ jobs:
           set -euxo pipefail
           changelog_items=$(python maint_tools/parse_changelog.py CHANGELOG.md $RELEASE_VERSION)
           git add CHANGELOG.md
-          git commit -m "Update changelog for $RELEASE_VERSION"
+          git commit --allow-empty -m "Update changelog for $RELEASE_VERSION"
           git tag -a $RELEASE_VERSION -F <(echo $changelog_items)
       - name: Push commit to GitHub
         run: |
