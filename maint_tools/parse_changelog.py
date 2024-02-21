@@ -33,6 +33,9 @@ def update_date_in_changelog(changelog_content: str, version: str) -> str:
             output_lines.append(f"## [{version}] - {date_str}")
         else:
             output_lines.append(line)
+
+    # Adds an empty line at the end
+    output_lines.append("")
     return "\n".join(output_lines)
 
 
