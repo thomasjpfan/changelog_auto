@@ -35,7 +35,7 @@ jobs:
           echo "changelog_items=$changelog_items" >> "$GITHUB_ENV"
           git add CHANGELOG.md
           git commit --allow-empty -m "Update changelog for $RELEASE_VERSION"
-          git tag -a $RELEASE_VERSION
+          git tag $RELEASE_VERSION
       - name: Push commit to GitHub
         run: |
           git push origin ${{ github.event.inputs.main_version }}
