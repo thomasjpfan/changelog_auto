@@ -34,13 +34,20 @@ jobs:
           changelog_items=$(python maint_tools/parse_changelog.py CHANGELOG.md $RELEASE_VERSION)
           git add CHANGELOG.md
           git commit --allow-empty -m "Update changelog for $RELEASE_VERSION"
-          git tag -a $RELEASE_VERSION -F <(echo $changelog_items)
+          git tag $RELEASE_VERSION
+
+          echo $changelog_items > release_changelog.txt
       - name: Push commit to GitHub
         run: |
           git push origin ${{ github.event.inputs.main_version }}
           git push origin $RELEASE_VERSION
       - name: Create release with tag
         run: |
-          gh release create $RELEASE_VERSION -t $RELEASE_VERSION --notes-from-tag --prerelease
+          set -euxo pipefail
+          if [[ $RELEASE_VERSION == *"b"* || ]]; then
+            gh release create $RELEASE_VERSION -t $RELEASE_VERSION --notes-file release_changelog.txt --prerelease
+          else
+            gh release create $RELEASE_VERSION -t $RELEASE_VERSION --notes-file release_changelog.txt
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
