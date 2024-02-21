@@ -35,9 +35,9 @@ jobs:
           git add CHANGELOG.md
           git commit -m "Update changelog for $RELEASE_VERSION"
           git tag -a $RELEASE_VERSION -F <(echo $changelog_items)
-      # - name: Push commit to GitHub
-      #   run: |
-      #     git push origin $RELEASE_VERSION
-      # - name: Create release with tag
-      #   run: |
-      #     gh release create $TAG -t $TAG --notes-from-tag
+      - name: Push commit to GitHub
+        run: |
+          git push origin $RELEASE_VERSION
+      - name: Create release with tag
+        run: |
+          gh release create $RELEASE_VERSION -t $RELEASE_VERSION --notes-from-tag
