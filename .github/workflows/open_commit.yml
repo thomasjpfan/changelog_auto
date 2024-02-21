@@ -32,15 +32,16 @@ jobs:
         run: |
           set -euxo pipefail
           changelog_items=$(python maint_tools/parse_changelog.py CHANGELOG.md $RELEASE_VERSION)
+          echo "changelog_items=$changelog_items" >> "$GITHUB_ENV"
           git add CHANGELOG.md
           git commit --allow-empty -m "Update changelog for $RELEASE_VERSION"
-          git tag -a $RELEASE_VERSION -F <(echo $changelog_items)
+          git tag -a $RELEASE_VERSION
       - name: Push commit to GitHub
         run: |
           git push origin ${{ github.event.inputs.main_version }}
           git push origin $RELEASE_VERSION
       - name: Create release with tag
         run: |
-          gh release create $RELEASE_VERSION -t $RELEASE_VERSION --notes-from-tag
+          gh release create $RELEASE_VERSION -t $RELEASE_VERSION -n $changelog_items
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
