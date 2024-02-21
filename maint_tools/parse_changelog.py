@@ -59,7 +59,10 @@ if __name__ == "__main__":
     release_version = version_match.group(1)
 
     if release_version not in changelog:
-        print(f"{release_version} is not in changelog! Add changelog items to continue")
+        print(
+            f"{release_version} is not in changelog! Add changelog items to continue",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     if args.only_check:
