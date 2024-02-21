@@ -3,7 +3,7 @@ name: Create and push commit
 on:
   workflow_dispatch:
     inputs:
-      message:
+      release_version:
         type: string
         required: true
 
@@ -23,9 +23,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Update changelog
+        run: |
+          changelog_items=$(python maint_tools/parse_changelog.py CHANGELOG.md $RELEASE_VERSION)
+          git commit -m "Update changelog for $RELEASE_VERSION"
+        env:
+          RELEASE_VERSION: ${{ inputs.release_version }}
       - name: Add commit
         run: |
-          git commit --allow-empty -m "$MESSAGE"
           git push origin ${{ github.event.inputs.main_version }}
         env:
           MESSAGE: ${{ inputs.message }}
