@@ -9,7 +9,7 @@ jobs:
   issue_commit:
     runs-on: "ubuntu-latest"
     permissions:
-      issues: write
+      pull-requests: write
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
